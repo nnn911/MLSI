@@ -4,9 +4,8 @@ OVITO MLSI is short for OVITO Maschine Learning Structure Identifier. A neural n
 The model used here is build on a [PyTorch](https://pytorch.org/) implementation for "[Dynamic Graph CNN for Learning on Point Clouds (DGCNN)](https://arxiv.org/pdf/1801.07829)" by [An Tao](antao97/dgcnn.pytorch).
 
 There are two different pretrained models provided in this repo.
-
-    1. `Models/Simple_Crystal_Structures` is trained to classify different simple crystal structures (BCC, cubic diamond, cubic perovskite, FCC, HCP) and their melts. This structure identifier was mainly used for comparison with established methods.
-    2. `Models/SiO2_polymorphs` is trained to differentiate a set of different silica polymorphs. Currently: Coesite 1, "Cristobalite 1", "Cristobalite 2", "Quartz 1", "Quartz 2", "Tridymite 1", "Tridymite 2", "Moganite 1", "Moganite 2", and "Stishovite 1" are supported. Moreover, the liquid phase can be seperated as "Melt".
+1. `Models/Simple_Crystal_Structures` is trained to classify different simple crystal structures (BCC, cubic diamond, cubic perovskite, FCC, HCP) and their melts. This structure identifier was mainly used for comparison with established methods.
+2. `Models/SiO2_polymorphs` is trained to differentiate a set of different silica polymorphs. Currently: Coesite 1, "Cristobalite 1", "Cristobalite 2", "Quartz 1", "Quartz 2", "Tridymite 1", "Tridymite 2", "Moganite 1", "Moganite 2", and "Stishovite 1" are supported. Moreover, the liquid phase can be seperated as "Melt".
 
 Please note: This repo and all its content are still in beta. Proceed at your own discretion and please contact me about bugs etc.
 # Installation

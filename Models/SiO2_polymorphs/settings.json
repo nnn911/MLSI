@@ -1,0 +1,28 @@
+{
+    "num_pts": 32,
+    "seed": 123456,
+    "batch_size": 128,
+    "lr": 0.001,
+    "eta_min": 1e-05,
+    "k": 8,
+    "dim9": false,
+    "emb_dims": 16,
+    "dropout": 0.2,
+    "epochs": 500,
+    "split": 0.8,
+    "n_samples": 500000,
+    "num_outputs": 11,
+    "classes": {
+        "0": "Coesite 1",
+        "1": "Low Cristobalite 1",
+        "2": "Low Cristobalite 2",
+        "3": "Low Quartz 1",
+        "4": "Low Quartz 2",
+        "5": "Low Tridymite 1",
+        "6": "Low Tridymite 2",
+        "7": "Moganite 1",
+        "8": "Moganite 2",
+        "9": "Stishovite 1",
+        "10": "Melt"
+    }
+}

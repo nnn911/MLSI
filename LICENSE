@@ -19,3 +19,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Copyright for additional portions of project OVITO MLSI are held by An Tao,
+2020 as part of DGCNN.pytorch (https://github.com/antao97/dgcnn.pytorch)
+and are provided under the MIT license.
+All other copyright for OVITO MLSI are held by Daniel Utt, 2022.

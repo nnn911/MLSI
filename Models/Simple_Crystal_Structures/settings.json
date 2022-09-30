@@ -1,0 +1,23 @@
+{
+    "num_pts": 32,
+    "seed": 123456,
+    "batch_size": 128,
+    "lr": 0.001,
+    "eta_min": 1e-05,
+    "k": 8,
+    "dim9": false,
+    "emb_dims": 16,
+    "dropout": 0.2,
+    "epochs": 250,
+    "split": 0.8,
+    "n_samples": 500000,
+    "num_outputs": 6,
+    "classes": {
+        "0": "BCC",
+        "1": "Cubic Diamond",
+        "2": "FCC",
+        "3": "HCP",
+        "4": "cubic Perovskite",
+        "5": "Melt"
+    }
+}

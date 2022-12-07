@@ -1,5 +1,5 @@
-# OVITO MLSI
-OVITO MLSI is short for OVITO Maschine Learning Structure Identifier. A neural network based crystal structure identification engine.
+# MLSI
+MLSI is short for Maschine Learning Structure Identifier. A neural network based crystal structure identification engine implemented as python script modifier for OVITO.
 
 The model used here is build on a [PyTorch](https://pytorch.org/) implementation for "[Dynamic Graph CNN for Learning on Point Clouds (DGCNN)](https://arxiv.org/pdf/1801.07829)" by [An Tao](antao97/dgcnn.pytorch).
 
@@ -29,6 +29,9 @@ The code provided here most likely works on many versions of [PyTorch](https://p
 - Ubuntu 20.04 LTS.
 - The KDTree version of the neigbor finder was tested using SciPy version 1.9.1.
 - For CUDA, NVIDIA driver 510.85.02 with CUDA Version 11.6 was used.
+
+# Disclaimer
+This project and any code therein is not associated or affiliated to the OVITO GmbH.
 
 # Acknowledgement
 Work on this project was funded by the National High Performance Computing Center for Computational Engineering Science [NHR4CES](https://www.nhr4ces.de/).

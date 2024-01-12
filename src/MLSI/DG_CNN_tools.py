@@ -1,18 +1,12 @@
-import json
-import os
-import time
-
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from ovito.data import DataCollection, NearestNeighborFinder, DataTable, ElementType
-from ovito.modifiers import (
-    DeleteSelectedModifier,
-    ExpressionSelectionModifier,
-    ReplicateModifier,
-)
-from torch.utils.data import DataLoader, Dataset
+import os
+import json
+from torch.utils.data import Dataset
+from ovito.data import NearestNeighborFinder
+import numpy as np
+import scipy.spatial as sps
 
 
 # Copyright for parts of DGCNN_cls are held by An Tao, 2020 as part of
@@ -37,7 +31,7 @@ class DGCNN_cls(nn.Module):
         num_points = x.size(2)
         x = x.view(batch_size, -1, num_points)
         if idx is None:
-            if dim9 == False:
+            if dim9 is False:
                 idx = DGCNN_cls.knn(x, k=k)
             else:
                 idx = DGCNN_cls.knn(x[:, 6:], k=k)
@@ -187,8 +181,6 @@ class OvitoDataSet_NearestNeighborFinder(Dataset):
 
 class OvitoDataSet_KDTree(Dataset):
     def __init__(self, atoms, num_pts):
-        import scipy.spatial as sps
-
         self.num_pts = num_pts
         self.tree = sps.KDTree(atoms)
 
@@ -203,110 +195,3 @@ class OvitoDataSet_KDTree(Dataset):
 
     def __len__(self):
         return len(self.tree.data)
-
-
-def modify(
-    frame: int,
-    data: DataCollection,
-    model_dir: str = "",
-    cutoff=0.0,
-    NearestNeighborFinder=True,
-    KDTree=False,
-    rep=3,
-    buffer=0.1,
-):
-    start = time.perf_counter()
-
-    if (NearestNeighborFinder + KDTree) != 1:
-        raise ValueError("Select only one option of: NearestNeighborFinder and KDTree!")
-    if (not isinstance(model_dir, str)) or (len(model_dir) == 0):
-        raise ValueError(f"{model_dir} is not a valid directory name!")
-    if not os.path.isdir(model_dir):
-        raise NotADirectoryError(f"{model_dir} does not exist!")
-    if KDTree and (rep % 2) == 0:
-        raise ValueError("rep needs to be an odd number!")
-
-    with open(os.path.join(model_dir, "settings.json"), "r") as f:
-        settings = json.load(f)
-
-    mapping = {int(k): v for k, v in settings["classes"].items()}
-    mapping[-1] = "Other"
-    print("Possible classes:")
-    for k, v in mapping.items():
-        print(f"{k}: {v}")
-
-    torch.manual_seed(settings["seed"])
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
-    model = Restored_Model(model_dir)
-
-    batch_size = 8 * settings["batch_size"]
-    if KDTree:
-        original_num_atoms = data.particles.count
-        rep = np.array((rep, rep, rep), dtype=int) * data.cell.pbc
-        data.apply(
-            ReplicateModifier(
-                num_x=rep[0], num_y=rep[1], num_z=rep[2], adjust_box=False
-            )
-        )
-        expr = (
-            f"ReducedPosition.X <= {-buffer} || ReducedPosition.X > {1+buffer}"
-            f"|| ReducedPosition.Y <= {-buffer} || ReducedPosition.Y > {1+buffer}"
-            f"|| ReducedPosition.Z <= {-buffer} || ReducedPosition.Z > {1+buffer}"
-        )
-        data.apply(ExpressionSelectionModifier(expression=expr))
-        data.apply(DeleteSelectedModifier())
-        dataSet = OvitoDataSet_KDTree(data.particles["Position"], settings["num_pts"])
-    else:
-        dataSet = OvitoDataSet_NearestNeighborFinder(data, settings["num_pts"])
-
-    struc = np.zeros(data.particles.count, dtype=int)
-    score = np.zeros(data.particles.count)
-
-    batch_size = 8 * settings["batch_size"]
-    loader = DataLoader(dataSet, num_workers=0, batch_size=batch_size)
-
-    for i, dat in enumerate(loader):
-        dat = dat.permute(0, 2, 1)
-        dat = dat.float().to(device)
-        pred = model(dat).softmax(dim=1)
-        val, ind = torch.max(pred, 1)
-        struc[i * batch_size : (i + 1) * batch_size] = ind.cpu()
-        score[i * batch_size : (i + 1) * batch_size] = val.cpu()
-        yield i / len(loader)
-
-    struc[score < cutoff] = -1
-    data.particles_.create_property("Structure", data=struc)
-    data.particles_.create_property("Score", data=score)
-
-    if KDTree:
-        expr = (
-            r"ReducedPosition.X < 0 || ReducedPosition.X >= 1"
-            r"|| ReducedPosition.Y < 0 || ReducedPosition.Y >= 1"
-            r"|| ReducedPosition.Z < 0 || ReducedPosition.Z >= 1"
-        )
-        data.apply(ExpressionSelectionModifier(expression=expr))
-        data.apply(DeleteSelectedModifier())
-        if data.particles.count != original_num_atoms:
-            print(
-                "Warning: Atoms gained or lost during padding! Proceed with caution or use NearestNeighborFinder instead of KDTree"
-            )
-
-    uni, cts = np.unique(data.particles["Structure"], return_counts=True)
-
-    print("\nClassification result:")
-    for u, c in zip(uni, cts):
-        print(mapping[int(u)], f"{c / data.particles.count :.3f}")
-        data.attributes[f"MLSI.counts.{mapping[int(u)]}"] = c
-
-    table = DataTable(
-        title="Structure counts",
-        plot_mode=DataTable.PlotMode.BarChart,
-    )
-    table.x = table.create_property("Structure type", data=uni)
-    for i, (u, c) in enumerate(zip(uni, cts)):
-        table.x.types.append(ElementType(id=i, name=mapping[u]))
-    table.y = table.create_property("Count", data=cts)
-    data.objects.append(table)
-
-    print(f"\nWall time: {time.perf_counter() - start} s")

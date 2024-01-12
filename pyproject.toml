@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MLSI"
+version = "2024.1"
+description = "A neural network based crystal structure identification engine implemented as python script modifier for OVITO."
+keywords = ["ovito", "ovito-extension"]
+authors = [{name = "Daniel Utt", email = "utt@ovito.org"}]
+maintainers = [{name = "Daniel Utt", email = "utt@ovito.org"}]
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = [
+    "ovito >= 3.10",
+    "numpy",
+    "scipy",
+    "torch==1.13.1"
+]
+
+[project.urls]
+repository = "https://github.com/nnn911/MLSI"
+
+[project.entry-points.'OVITO.Modifier']
+"MLSI" = "MLSI:MLSI"
+
+[tool.setuptools.package-data]
+mlsi = ["pretrained_models/*"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore:module 'sre_parse' is deprecated:DeprecationWarning",
+    "ignore:module 'sre_constants' is deprecated:DeprecationWarning",
+]

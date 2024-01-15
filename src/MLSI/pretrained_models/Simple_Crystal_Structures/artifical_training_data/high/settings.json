@@ -1,0 +1,27 @@
+{
+	"h5fname_source": "1000000_32_high/numpy_data.h5", 
+	"mapfname": "1000000_32_high/rev_mapping.json", 
+	"num_pts": 32, 
+	"seed": 123456, 
+	"batch_size": 128, 
+	"lr": 0.001, 
+	"eta_min": 1e-05, 
+	"k": 8, 
+	"dim9": false, 
+	"emb_dims": 16, 
+	"dropout": 0.2, 
+	"epochs": 250, 
+	"split": 0.8, 
+	"n_samples": 500000, 
+	"schedule_divisor": 1, 
+	"h5fname": "/tmp/tmpc7aetqpo/numpy_data.h5", 
+	"num_outputs": 6, 
+	"classes": {
+		"0": "BCC", 
+		"1": "Cubic Diamond", 
+		"2": "FCC", 
+		"3": "HCP", 
+		"4": "Cubic Perovskite", 
+		"5": "Melt"
+	}
+}

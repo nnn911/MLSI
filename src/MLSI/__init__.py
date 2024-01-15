@@ -55,7 +55,7 @@ class MLSI(ModifierInterface):
             raise NotADirectoryError(
                 f"Model directory: {self.model_dir} does not exist!"
             )
-        if self.KDTree and (self.rep % 2) == 0:
+        if self.use_KDTree and (self.rep % 2) == 0:
             raise ValueError("rep needs to be an odd number!")
 
         with open(os.path.join(self.model_dir, "settings.json"), "r") as f:

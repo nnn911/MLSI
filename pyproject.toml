@@ -7,8 +7,8 @@ name = "MLSI"
 version = "2024.1"
 description = "A neural network based crystal structure identification engine implemented as python script modifier for OVITO."
 keywords = ["ovito", "ovito-extension"]
-authors = [{name = "Daniel Utt", email = "utt@ovito.org"}]
-maintainers = [{name = "Daniel Utt", email = "utt@ovito.org"}]
+authors = [{name = "Daniel Utt", email = "utt@ovito.org"},{name = "Linus Erhard", email = "erhard@mm.tu-darmstadt.de"}]
+maintainers = [{name = "Daniel Utt", email = "utt@ovito.org"},{name = "Linus Erhard", email = "erhard@mm.tu-darmstadt.de"}]
 license = {text = "MIT"}
 readme = "README.md"
 dependencies = [

@@ -25,7 +25,9 @@ repository = "https://github.com/nnn911/MLSI"
 "MLSI" = "MLSI:MLSI"
 
 [tool.setuptools.package-data]
-mlsi = ["pretrained_models/*"]
+MLSI = ["pretrained_models/**/*json", 
+        "pretrained_models/**/*tar"]
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
